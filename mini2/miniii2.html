@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelEase - Your Journey Begins Here</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">Travel<span class="text-secondary">Ease</span></h1>
+                <nav class="ml-10 hidden md:block">
+                    <ul class="flex space-x-8">
+                        <li><a href="#" class="text-dark hover:text-primary font-medium">Home</a></li>
+                        <li><a href="#booking" class="text-dark hover:text-primary font-medium">Book</a></li>
+                        <li><a href="#services" class="text-dark hover:text-primary font-medium">Services</a></li>
+                        <li><a href="#manage" class="text-dark hover:text-primary font-medium">Manage</a></li>
+                        <li><a href="#testimonials" class="text-dark hover:text-primary font-medium">Testimonials</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold hidden" id="user-avatar">RS</div>
+                <button id="login-btn" class="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">Login</button>
+                <button id="signup-btn" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-600 transition">Sign Up</button>
+                <button id="logout-btn" class="bg-accent text-white px-4 py-2 rounded-lg font-medium hover:bg-amber-600 transition hidden">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="auth-modal">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 relative">
+            <div class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition" id="close-modal">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <div class="flex border-b">
+                <div class="flex-1 py-4 text-center font-semibold cursor-pointer border-b-2 border-primary text-primary" id="login-tab">Login</div>
+                <div class="flex-1 py-4 text-center font-semibold cursor-pointer text-gray-500" id="signup-tab">Sign Up</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="p-6" id="login-form">
+                <div class="space-y-3 mb-4">
+                    <button class="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center font-medium hover:bg-gray-50 transition">
+                        <i class="fab fa-google text-red-500 mr-2"></i>Continue with Google
+                    </button>
+                    <button class="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center font-medium hover:bg-gray-50 transition">
+                        <i class="fab fa-facebook text-blue-600 mr-2"></i>Continue with Facebook
+                    </button>
+                </div>
+                
+                <div class="flex items-center my-6">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="mx-4 text-gray-500">or</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+                
+                <form id="loginForm">
+                    <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Email address" required>
+                    
+                    <div class="relative mb-4">
+                        <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Password" id="login-password" required>
+                        <span class="absolute right-3 top-3.5 text-gray-500 cursor-pointer" onclick="togglePassword('login-password')">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+                    
+                    <a href="#" class="text-primary text-sm block text-right mb-4" id="forgot-password">Forgot password?</a>
+                    
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Login</button>
+                </form>
+                
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Don't have an account? <a href="#" class="text-primary font-medium" onclick="showSignup()">Sign up</a>
+                </p>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="p-6 hidden" id="signup-form">
+                <div class="space-y-3 mb-4">
+                    <button class="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center font-medium hover:bg-gray-50 transition">
+                        <i class="fab fa-google text-red-500 mr-2"></i>Continue with Google
+                    </button>
+                    <button class="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center font-medium hover:bg-gray-50 transition">
+                        <i class="fab fa-facebook text-blue-600 mr-2"></i>Continue with Facebook
+                    </button>
+                </div>
+                
+                <div class="flex items-center my-6">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="mx-4 text-gray-500">or</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+                
+                <form id="signupForm">
+                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Full Name" required>
+                    <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Email address" required>
+                    <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Phone Number" required>
+                    
+                    <div class="relative mb-4">
+                        <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Password" id="signup-password" required>
+                        <span class="absolute right-3 top-3.5 text-gray-500 cursor-pointer" onclick="togglePassword('signup-password')">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+                    
+                    <div class="relative mb-4">
+                        <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Confirm Password" id="confirm-password" required>
+                        <span class="absolute right-3 top-3.5 text-gray-500 cursor-pointer" onclick="togglePassword('confirm-password')">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+                    
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" id="terms" class="mr-2" required>
+                        <label for="terms" class="text-sm text-gray-600">
+                            I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Create Account</button>
+                </form>
+                
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Already have an account? <a href="#" class="text-primary font-medium" onclick="showLogin()">Log in</a>
+                </p>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div class="p-6 hidden" id="forgot-form">
+                <h2 class="text-xl font-bold text-center mb-2">Reset Password</h2>
+                <p class="text-center text-gray-600 text-sm mb-6">
+                    Enter your email address and we'll send you a link to reset your password.
+                </p>
+                
+                <form id="forgotForm">
+                    <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Email address" required>
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">Send Reset Link</button>
+                </form>
+                
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Remember your password? <a href="#" class="text-primary font-medium" onclick="showLogin()">Back to login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-500 to-emerald-500 text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Your Journey Begins Here</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Book trains, buses, flights, and events all in one place with the easiest and fastest booking system</p>
+            <a href="#booking" class="bg-white text-primary px-6 py-3 rounded-full font-bold text-lg hover:bg-gray-100 transition inline-block">Book Now</a>
+            
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-lg hover:bg-opacity-30 transition">
+                    <i class="fas fa-train text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Trains</h3>
+                    <p>Book tickets for all major routes</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-lg hover:bg-opacity-30 transition">
+                    <i class="fas fa-bus text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Buses</h3>
+                    <p>Comfortable buses for every destination</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-lg hover:bg-opacity-30 transition">
+                    <i class="fas fa-plane text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Flights</h3>
+                    <p>Domestic and international flights</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-lg hover:bg-opacity-30 transition">
+                    <i class="fas fa-ticket-alt text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Events</h3>
+                    <p>Concerts, sports, and more</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search & Booking Section -->
+    <section id="booking" class="py-16 bg-gray-50 scroll-mt-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Book Your Travel</h2>
+            <p class="text-gray-600 text-center mb-8">Find the best options for your journey</p>
+            
+            <!-- Transport Type Tabs -->
+            <div class="flex justify-center mb-8">
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <button type="button" class="px-6 py-3 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                        <i class="fas fa-train mr-2"></i>Trains
+                    </button>
+                    <button type="button" class="px-6 py-3 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                        <i class="fas fa-bus mr-2"></i>Buses
+                    </button>
+                    <button type="button" class="px-6 py-3 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                        <i class="fas fa-plane mr-2"></i>Flights
+                    </button>
+                    <button type="button" class="px-6 py-3 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                        <i class="fas fa-ticket-alt mr-2"></i>Events
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search Form -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <form id="search-form">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">From</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Departure city" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">To</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Destination city" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Date</label>
+                            <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Passengers</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>1 Passenger</option>
+                                <option>2 Passengers</option>
+                                <option>3 Passengers</option>
+                                <option>4 Passengers</option>
+                                <option>5+ Passengers</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Class</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>Economy</option>
+                                <option>Business</option>
+                                <option>First Class</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Preferences</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>No Preferences</option>
+                                <option>Window Seat</option>
+                                <option>Aisle Seat</option>
+                                <option>Extra Legroom</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition">Search</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Results -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Available Options</h3>
+                <div class="space-y-4">
+                    <!-- Sample Result Item -->
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-lg">Rajdhani Express</h4>
+                            <span class="text-primary font-bold">₹1,999</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 mb-3">
+                            <div>New Delhi → Mumbai</div>
+                            <div>08:00 - 16:30 (8h 30m)</div>
+                        </div>
+                        <div class="flex justify-between">
+                            <div class="text-sm">
+                                <span class="text-green-600">12 seats available</span>
+                            </div>
+                            <button class="bg-primary text-white px-4 py-1 rounded-lg text-sm hover:bg-blue-600 transition">Select</button>
+                        </div>
+                    </div>
+                    
+                    <!-- More result items would go here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Our Services</h2>
+            <p class="text-gray-600 text-center mb-12">Everything you need for a seamless travel experience</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-search text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Easy Search</h3>
+                    <p class="text-gray-600">Find the best travel options with our powerful search engine and filters.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-lock text-green-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Secure Payments</h3>
+                    <p class="text-gray-600">Multiple payment options with bank-level security for your peace of mind.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-ticket-alt text-amber-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">E-Tickets</h3>
+                    <p class="text-gray-600">Get instant e-tickets with QR codes. No need to print, just show on your phone.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-user-shield text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
+                    <p class="text-gray-600">Our customer support team is available round the clock to assist you.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-route text-green-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Multiple Routes</h3>
+                    <p class="text-gray-600">Choose from thousands of routes across the country with various transport options.</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 hover:translate-y-[-5px] hover:shadow-lg transition">
+                    <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-calendar-alt text-amber-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Easy Rescheduling</h3>
+                    <p class="text-gray-600">Change your travel plans easily with our simple rescheduling system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ticket Management Section -->
+    <section id="manage" class="py-16 bg-gray-50 scroll-mt-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Your Tickets</h2>
+            <p class="text-gray-600 text-center mb-12">Manage your bookings with ease</p>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold mb-4 md:mb-0">Booking History</h3>
+                    <div class="relative">
+                        <input type="text" placeholder="Search bookings..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-auto">
+                    </div>
+                </div>
+                
+                <!-- Sample Ticket -->
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-xl text-white mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-xl">Rajdhani Express</h4>
+                            <p class="text-blue-100">Booking ID: #TR789456</p>
+                        </div>
+                        <div class="text-right mt-4 md:mt-0">
+                            <p class="text-lg font-bold">₹1,845</p>
+                            <p class="text-blue-100">Booked on: 15 Nov, 2023</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <p class="text-blue-100">FROM</p>
+                            <p class="font-bold text-lg">New Delhi</p>
+                            <p>20 Nov, 2025 | 08:00</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-100">TO</p>
+                            <p class="font-bold text-lg">Mumbai</p>
+                            <p>20 Nov, 205 | 16:30</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-center mt-6">
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-blue-100">Passenger</p>
+                            <p class="font-bold">Novan Velora</p>
+                        </div>
+                        <div class="mb-4 md:mb-0">
+                            <p class="text-blue-100">Seat</p>
+                            <p class="font-bold">B2, AC 3-tier</p>
+                        </div>
+                        <div class="bg-white w-32 h-32 flex items-center justify-center rounded-lg">
+                            <i class="fas fa-qrcode text-5xl text-gray-700"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-end mt-6 gap-2">
+                        <button class="bg-white text-blue-500 px-4 py-2 rounded-lg font-medium">Cancel</button>
+                        <button class="bg-white text-blue-500 px-4 py-2 rounded-lg font-medium">Download</button>
+                        <button class="bg-white text-blue-500 px-4 py-2 rounded-lg font-medium">Reschedule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">What Our Customers Say</h2>
+            <p class="text-gray-600 text-center mb-12">Hear from travelers who have used our platform</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:translate-y-[-5px] transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">RH</div>
+                        <div>
+                            <h4 class="font-bold">Rohit Hatwar</h4>
+                            <p class="text-gray-500 text-sm">Frequent Traveler</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The easiest booking experience I've ever had. The seat selection feature is fantastic!"</p>
+                    <div class="flex mt-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:translate-y-[-5px] transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">RK</div>
+                        <div>
+                            <h4 class="font-bold">Raj Khare</h4>
+                            <p class="text-gray-500 text-sm">Business Traveler</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"I travel weekly for work, and TravelEase has made booking so much simpler. The mobile tickets are a lifesaver!"</p>
+                    <div class="flex mt-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:translate-y-[-5px] transition">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold mr-3">HM</div>
+                        <div>
+                            <h4 class="font-bold">Harshu Mendhe</h4>
+                            <p class="text-gray-500 text-sm">Family Vacationer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Booking for my family of 5 used to be a headache. With TravelEase, I can easily select seats together and manage all our tickets in one place."</p>
+                    <div class="flex mt-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Travel<span class="text-green-400">Ease</span></h3>
+                    <p class="text-gray-400">Your one-stop solution for all travel bookings. Simple, fast, and reliable.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#booking" class="text-gray-400 hover:text-white">Book Tickets</a></li>
+                        <li><a href="#manage" class="text-gray-400 hover:text-white">Manage Booking</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cancellation Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400"><i class="fas fa-envelope mr-2"></i> support@travelease.com</li>
+                        <li class="text-gray-400"><i class="fas fa-phone mr-2"></i> +91 1122334455</li>
+                        <li class="flex space-x-4 pt-2">
+                            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2025 TravelEase. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User authentication state
+        let currentUser = null;
+        
+        // DOM Elements
+        const authModal = document.getElementById('auth-modal');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const closeModal = document.getElementById('close-modal');
+        const forgotPassword = document.getElementById('forgot-password');
+        const userAvatar = document.getElementById('user-avatar');
+        const loginTab = document.getElementById('login-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const forgotForm = document.getElementById('forgot-form');
+        
+        // Check if user is logged in (from localStorage)
+        function checkAuthState() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                currentUser = JSON.parse(user);
+                updateUIForAuthState(true);
+            }
+        }
+        
+        // Update UI based on auth state
+        function updateUIForAuthState(isLoggedIn) {
+            if (isLoggedIn) {
+                loginBtn.classList.add('hidden');
+                signupBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                userAvatar.classList.remove('hidden');
+                userAvatar.textContent = currentUser.name.charAt(0);
+            } else {
+                loginBtn.classList.remove('hidden');
+                signupBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                userAvatar.classList.add('hidden');
+            }
+        }
+        
+        // Event Listeners
+        loginBtn.addEventListener('click', () => {
+            authModal.classList.remove('hidden');
+            showLogin();
+        });
+
+        signupBtn.addEventListener('click', () => {
+            authModal.classList.remove('hidden');
+            showSignup();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateUIForAuthState(false);
+        });
+
+        closeModal.addEventListener('click', () => {
+            authModal.classList.add('hidden');
+        });
+
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            showForgotPassword();
+        });
+
+        loginTab.addEventListener('click', showLogin);
+        signupTab.addEventListener('click', showSignup);
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.add('hidden');
+            }
+        });
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+            
+            // Simulate login (in real app, this would call an API)
+            currentUser = {
+                name: 'Guest-user',
+                email: email,
+                phone: '1122334455'
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateUIForAuthState(true);
+            authModal.classList.add('hidden');
+            
+            alert('Login successful! Welcome back, ' + currentUser.name);
+        });
+        
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = e.target.querySelector('input[type="text"]').value;
+            const email = e.target.querySelector('input[type="email"]').value;
+            const phone = e.target.querySelector('input[type="tel"]').value;
+            const password = e.target.querySelectorAll('input[type="password"]')[0].value;
+            
+            // Simulate signup (in real app, this would call an API)
+            currentUser = {
+                name: name,
+                email: email,
+                phone: phone
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateUIForAuthState(true);
+            authModal.classList.add('hidden');
+            
+            alert('Account created successfully! Welcome to TravelEase, ' + currentUser.name);
+        });
+        
+        document.getElementById('forgotForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            
+            // Simulate password reset (in real app, this would call an API)
+            alert('Password reset link has been sent to ' + email);
+            showLogin();
+        });
+        
+        // Toggle between login and signup forms
+        function showLogin() {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            forgotForm.classList.add('hidden');
+            loginTab.classList.add('border-b-2', 'border-primary', 'text-primary');
+            signupTab.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            signupTab.classList.add('text-gray-500');
+        }
+        
+        function showSignup() {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            forgotForm.classList.add('hidden');
+            signupTab.classList.add('border-b-2', 'border-primary', 'text-primary');
+            loginTab.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            loginTab.classList.add('text-gray-500');
+        }
+        
+        function showForgotPassword() {
+            loginForm.classList.add('hidden');
+            signupForm.classList.add('hidden');
+            forgotForm.classList.remove('hidden');
+            loginTab.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            signupTab.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            loginTab.classList.add('text-gray-500');
+            signupTab.classList.add('text-gray-500');
+        }
+        
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = passwordInput.nextElementSibling.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Search form submission
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                authModal.classList.remove('hidden');
+                showLogin();
+                alert('Please login to search for travel options');
+                return;
+            }
+            
+            alert('Searching for travel options...');
+            // In a real application, this would send a request to the server
+        });
+        
+        // Initialize
+        checkAuthState();
+    </script>
+</body>
+</html>
