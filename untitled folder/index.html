@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Enquiry Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="./input.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="flex justify-center items-center min-h-screen p-5">
+    <!-- New Background Elements -->
+    <div class="background-container">
+        <div class="grid-pattern"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <!-- Academic Icons -->
+        <div class="academic-icons">🎓</div>
+        <div class="academic-icons">📚</div>
+        <div class="academic-icons">📝</div>
+        <div class="academic-icons">🔬</div>
+        <div class="academic-icons">💼</div>
+        <div class="academic-icons">🏫</div>
+        <div class="academic-icons">📊</div>
+        <div class="academic-icons">🎯</div>
+    </div>
+    
+    <!-- Chat Container -->
+    <div class="w-full max-w-md h-[600px] chat-container flex flex-col">
+        <div class="chat-header text-white p-5 text-center text-xl font-bold flex items-center justify-center">
+            <i class="fas fa-graduation-cap mr-3"></i>
+            College Enquiry Assistant
+        </div>
+        
+        <div class="flex-1 p-5 overflow-y-auto bg-blue-50/70 flex flex-col gap-4" id="chatMessages">
+            <div class="message-bubble bot-bubble animate-fade-in">
+                Hi there! <span class="text-xl">👋</span> I'm your college enquiry assistant. Which college would you like information about?
+            </div>
+            <div class="message-bubble bot-bubble animate-fade-in">
+                <div class="font-medium mb-2">Select a college:</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="college-option bg-white border border-blue-300 rounded-lg p-3 text-center cursor-pointer transition-all hover:bg-blue-100 flex flex-col items-center" onclick="selectCollege('vnit')">
+                        <i class="fas fa-university text-2xl text-blue-600 mb-2"></i>
+                        <span>VNIT Nagpur</span>
+                    </div>
+                    <div class="college-option bg-white border border-blue-300 rounded-lg p-3 text-center cursor-pointer transition-all hover:bg-blue-100 flex flex-col items-center" onclick="selectCollege('rcoem')">
+                        <i class="fas fa-school text-2xl text-blue-600 mb-2"></i>
+                        <span>RCOEM</span>
+                    </div>
+                    <div class="college-option bg-white border border-blue-300 rounded-lg p-3 text-center cursor-pointer transition-all hover:bg-blue-100 flex flex-col items-center" onclick="selectCollege('ycce')">
+                        <i class="fas fa-book-reader text-2xl text-blue-600 mb-2"></i>
+                        <span>YCCE</span>
+                    </div>
+                    <div class="college-option bg-white border border-blue-300 rounded-lg p-3 text-center cursor-pointer transition-all hover:bg-blue-100 flex flex-col items-center" onclick="selectCollege('raisoni')">
+                        <i class="fas fa-graduation-cap text-2xl text-blue-600 mb-2"></i>
+                        <span>Raisoni</span>
+                    </div>
+                    <div class="college-option bg-white border border-blue-300 rounded-lg p-3 text-center cursor-pointer transition-all hover:bg-blue-100 flex flex-col items-center col-span-2" onclick="selectCollege('priyadarshini')">
+                        <i class="fas fa-atom text-2xl text-blue-600 mb-2"></i>
+                        <span>Priyadarshini</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex p-4 bg-white/80 border-t border-gray-200/50 backdrop-blur-sm">
+            <input type="text" id="userInput" class="flex-1 message-input" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+            <button class="send-button ml-3" onclick="sendMessage()">
+                <i class="fas fa-paper-plane text-white"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="./index.js"></script>
+
+</body>
+</html>
